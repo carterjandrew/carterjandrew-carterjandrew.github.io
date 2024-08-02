@@ -1,10 +1,12 @@
 import React from 'react'
 import './App.css'
+import './drac.css'
 import { NavLink, useLocation, useRoutes } from 'react-router-dom'
 import Root from './layouts/Root'
 import { AnimatePresence } from 'framer-motion'
 import Test from './blogs/Test.mdx'
 import BlogLayout from './layouts/blogLayout'
+import { MDXProps } from 'mdx/types'
 
 function App() {
 	const location = useLocation()
@@ -23,7 +25,9 @@ function App() {
 					children: [
 						{
 							index: true,
-							element: <Test />
+							element: (
+								<Test />
+							)
 						}
 					]
 				}
