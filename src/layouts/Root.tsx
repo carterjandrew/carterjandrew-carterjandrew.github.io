@@ -13,6 +13,7 @@ export default function Root() {
 	return (
 		<transitionContext.Provider value={[transition, setTransitionHook]}>
 			<NavBar />
+			<NavBar style={{opacity: 0, position: 'static'}} />
 			<motion.div
 				initial={{ opacity: 0, filter: 'blur(50px)' }}
 				animate={{ opacity: 1, filter: 'blur(0px)', transition: transition }}

@@ -3,6 +3,8 @@ import './App.css'
 import { NavLink, useLocation, useRoutes } from 'react-router-dom'
 import Root from './layouts/Root'
 import { AnimatePresence } from 'framer-motion'
+import Test from './blogs/Test.mdx'
+import BlogLayout from './layouts/blogLayout'
 
 function App() {
 	const location = useLocation()
@@ -13,11 +15,17 @@ function App() {
 			children: [
 				{
 					index: true,
-					element: <NavLink to='/test'>Test</NavLink>
+					element: <NavLink style={{ height: '200vh' }} to='/blog'>Test</NavLink>
 				},
 				{
-					path: '/test',
-					element: <NavLink to='/'>Home</NavLink>
+					path: '/blog',
+					element: <BlogLayout />,
+					children: [
+						{
+							index: true,
+							element: <Test />
+						}
+					]
 				}
 			]
 		}
