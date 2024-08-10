@@ -1,6 +1,8 @@
 import React from 'react'
 import './App.css'
 import './drac.css'
+import './gh.css'
+import './rehype.css'
 import { NavLink, useLocation, useRoutes } from 'react-router-dom'
 import Root from './layouts/Root'
 import { AnimatePresence } from 'framer-motion'
