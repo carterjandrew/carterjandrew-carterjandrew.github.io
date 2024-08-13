@@ -13,11 +13,11 @@ export default function Root() {
 	return (
 		<transitionContext.Provider value={[transition, setTransitionHook]}>
 			<NavBar />
-			<NavBar style={{opacity: 0, position: 'static'}} />
 			<motion.div
 				initial={{ opacity: 0, filter: 'blur(50px)' }}
 				animate={{ opacity: 1, filter: 'blur(0px)', transition: transition }}
 				exit={{ opacity: 0, filter: 'blur(10px)', transition: transition }}
+				style={{padding: 5, display: 'flex', flexDirection: 'column', flexGrow: 1}}
 			>
 				<Outlet />
 			</motion.div>
