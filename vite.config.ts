@@ -6,10 +6,11 @@ import rehypeSlug from 'rehype-slug'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+	base: 'https://carterjandrew.github.io/',
 	plugins: [
 		mdx({
 			rehypePlugins: [
-				rehypePrism, 
+				rehypePrism,
 				rehypeSlug
 			]
 		}),
