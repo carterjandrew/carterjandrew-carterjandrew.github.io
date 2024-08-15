@@ -11,6 +11,11 @@ export default function Home() {
 				<text>Human in progress</text>
 				<text>Based In Boulder</text>
 			</div>
+			<div>
+				<span>
+					<p>This website is being re-vamped and still under construction. Thank you for your patience!</p>
+				</span>
+			</div>
 		</>
 	)
 }

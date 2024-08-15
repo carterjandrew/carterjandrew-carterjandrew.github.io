@@ -3,6 +3,11 @@ body {
 	margin: 0;
 }
 
+img {
+		max-width: 1200px;
+		object-fit: contain;
+}
+
 :root {
 	--default-padding: .5em;
 	--shadow-color: #00000022;
@@ -22,6 +27,48 @@ body {
 		--glass-color: #ffffff33;
 		--glass-color-highlight: #ffffff44;
 	}
+}
+
+#emailform {
+	border: solid;
+	border-width: 1px;
+	border-color: var(--foreground-color);
+	border-radius: 10px;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+}
+
+#emailform textarea {
+	border-radius: 0;
+	border: none;
+	outline: solid;
+	outline-color: var(--foreground-color);
+	outline-width: 1px;
+	color: var(--foreground-color);
+	background: var(--background-color);
+	padding: .5em;
+}
+
+#emailform input {
+	padding: .5em;
+	border-radius: 0;
+	border: none;
+	outline: solid;
+	outline-color: var(--foreground-color);
+	outline-width: 1px;
+	color: var(--foreground-color);
+	background: var(--background-color)
+}
+
+#emailform button {
+	border-radius: 0;
+	border: none;
+	outline: solid;
+	outline-color: var(--foreground-color);
+	outline-width: 1px;
+	color: var(--foreground-color);
+	background: var(--background-color)
 }
 
 #bigname h1 {
@@ -66,7 +113,7 @@ div {
 #inner-navbar {
 	width: 100%;
 	padding: var(--default-padding);
-	gap: var(--default-padding);
+	gap: calc(var(--default-padding) * 5);
 	border-radius: 10px;
 	align-items: center;
 	background: var(--background-color);

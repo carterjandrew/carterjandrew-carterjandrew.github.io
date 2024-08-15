@@ -17,7 +17,7 @@ export default function Root() {
 				initial={{ opacity: 0, filter: 'blur(50px)' }}
 				animate={{ opacity: 1, filter: 'blur(0px)', transition: transition }}
 				exit={{ opacity: 0, filter: 'blur(10px)', transition: transition }}
-				style={{padding: 5, display: 'flex', flexDirection: 'column', flexGrow: 1}}
+				style={{padding: 5, display: 'flex', flexDirection: 'column', flexGrow: 1, alignItems: 'center'}}
 			>
 				<Outlet />
 			</motion.div>

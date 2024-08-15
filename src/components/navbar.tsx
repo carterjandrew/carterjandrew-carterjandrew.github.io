@@ -45,7 +45,7 @@ const NavBar: React.FC<NavBarProps> = ({ style }) => {
 					const className = delayedLocation.pathname === path ? 'delayed-active' : ''
 					return (
 						<motion.div whileHover={{ opacity: .5 }} style={{ overflow: 'auto' }}>
-							<NavLink key={link} to={path} className={className}>{name}</NavLink>
+							<NavLink key={link} to={path} className={className}>{name === 'About' ? "Get In Touch" : name}</NavLink>
 						</motion.div>
 					)
 				})}
