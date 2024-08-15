@@ -1,4 +1,4 @@
-import{j as n}from"./index-DD_Jzo_l.js";function t(o){const e={a:"a",blockquote:"blockquote",code:"code",h1:"h1",h2:"h2",h3:"h3",h4:"h4",li:"li",p:"p",pre:"pre",span:"span",strong:"strong",ul:"ul",...o.components};return n.jsxs(n.Fragment,{children:[n.jsx(e.h1,{id:"note-this-is-in-early-development",children:"Note: This is in early development!!"}),`
+import{j as n}from"./index-DWR4VuAw.js";function t(o){const e={a:"a",blockquote:"blockquote",code:"code",h1:"h1",h2:"h2",h3:"h3",h4:"h4",li:"li",p:"p",pre:"pre",span:"span",strong:"strong",ul:"ul",...o.components};return n.jsxs(n.Fragment,{children:[n.jsx(e.h1,{id:"note-this-is-in-early-development",children:"Note: This is in early development!!"}),`
 `,n.jsxs(e.p,{children:["KTile is a ",n.jsx(e.strong,{children:"kwin script"})," tiling manager made for ",n.jsx(e.a,{href:"https://kde.org/announcements/megarelease/6/",children:"KDE 6"})," replacing ",n.jsx(e.a,{href:"https://github.com/Bismuth-Forge/bismuth",children:"Bismuth"}),". Below is a copy of my notes thus far:"]}),`
 `,n.jsx(e.h1,{id:"ideal-functionality",children:"Ideal Functionality:"}),`
 `,n.jsxs(e.ul,{children:[`
