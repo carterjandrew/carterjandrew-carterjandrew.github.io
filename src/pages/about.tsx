@@ -7,6 +7,7 @@ export default function About() {
 
 	const valid = useMemo(() => {
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		if(returnAddress.length === 0) return 'Enter your email'
 		if(!emailRegex.test(returnAddress)) return 'Invalid email'
 		if(message.length === 0) return 'Add some text to the message'
 		return ''

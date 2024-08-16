@@ -12,65 +12,144 @@ So, why exactly would you want to use dynamic roles like this? Well, there are a
 
 4. **Federated Access**: You can use IAM roles to provide access to AWS resources for users who are authenticated by external identity providers (e.g., Google, Facebook, or corporate SSO). This is useful for integrating AWS services with existing authentication systems.
 
-## How to Create and Use Dynamic IAM Roles with STS
+ 5. **On-the-fly Content Access**: You can define dynamic resource access for each and every user from any federated source. This makes it easy to provide a webapp with user granular details.
 
-AWS Security Token Service (STS) is used to create temporary security credentials. Here’s a quick overview of how you can use STS to create dynamic IAM roles:
+## How to Create and Use Dynamic IAM Roles with STS using AWS SAM and Lambda
+
+AWS Security Token Service (STS) is used to create temporary security credentials. Here’s a quick overview of how you can use STS in a Lambda function to create dynamic IAM roles for any user:
 
 ### 1. **Define an IAM Role**
 
-First, create an IAM role with a policy that defines what resources the role can access. Here’s an example of a simple role policy:
+First, create an IAM role with a policy that allows the resource to assume tempoaray roles from a given role defition
 
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": "s3:GetObject",
-      "Resource": "arn:aws:s3:::example-bucket/*"
-    }
-  ]
-}
+```yaml
+  WebApiRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: 'Allow'
+            Principal:
+              Service: 'lambda.amazonaws.com'
+              AWS: !Sub 'arn:aws:iam::893462342304:user/example'
+            Action: 'sts:AssumeRole'
+      Policies:
+        - PolicyName: 'LambdaBasicExecution'
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: 'Allow'
+                Action:
+                  - 'logs:CreateLogGroup'
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
+                Resource: '*'
+        -  PolicyName: 'S3CrudPolicy'
+           PolicyDocument:
+             Version: '2012-10-17'
+             Statement:
+               - Effect: 'Allow'
+                 Action:
+                   - 's3:GetObject'
+                   - 's3:PutObject'
+                   - 's3:DeleteObject'
+                   - 's3:ListBucket'
+                   - 's3:CopyObject'
+                 Resource: 
+                   - !Sub 'arn:aws:s3:::${EditBucket}'
+                   - !Sub 'arn:aws:s3:::${EditBucket}/*'
+
 ```
 
-### 2. **Allow STS to Assume the Role**
+### 2. **Create an second role with general access to your resources**
 
-Modify the role’s trust policy to allow STS to assume the role. For example:
-
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "sts.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
+```yaml
+  TemporaryS3AccessRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: 'Allow'
+            Principal:
+              AWS: '*'
+            Action: 'sts:AssumeRole'
+      Policies:
+        - PolicyName: 'S3AccessPolicy'
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: 'Allow'
+                Action:
+                  - 's3:GetObject'
+                Resource: !Sub 'arn:aws:s3:::${EditBucket}/*'
 ```
 
-### 3. **Use STS to Assume the Role**
+### 3. **Define a lambda function that works with our `WebApiRole` to assume temporary roles in sts, then send those permissions back to our client**
 
-You can use the AWS SDK or CLI to assume the role and obtain temporary credentials. Here’s an example using the AWS CLI:
+Build a lambda function endpoint that handles the creation of a role using the AWS STS sdk
 
-```bash
-aws sts assume-role --role-arn "arn:aws:iam::123456789012:role/MyRole" --role-session-name "MySession"
+```ts
+	const policy = {
+		Version: "2012-10-17",
+		Statement: [
+			{
+				Effect: "Allow",
+				Action: "s3:GetObject",
+				Resource: `arn:aws:s3:::${requestConfig.Bucket}/${getAppPrefix(userId, appName)}/*`
+			}
+		]
+	};
+	const getSessionTokenCommand = new AssumeRoleCommand({
+		RoleArn: ROLE_ARN,
+		RoleSessionName: `TempS3AccessRoleFor${userId}`,
+		Policy: JSON.stringify(policy),
+		DurationSeconds: 3600
+	});
+
+	const temporaryCredentials = await stsClient.send(getSessionTokenCommand);
+
+	return {
+		statusCode: 200,
+		body: JSON.stringify({
+			iamCredentials: temporaryCredentials,
+		})
+	}
+
 ```
 
-This command will return temporary security credentials (Access Key ID, Secret Access Key, and Session Token) that you can use to interact with AWS services.
+### 4. **Utilize role in client to access a resource**
 
-### 4. **Use the Temporary Credentials**
+Using a state in react we can keep track of the iam credentials we get back from our api
 
-Configure your AWS SDK or CLI to use the temporary credentials. For example, with the AWS CLI:
-
-```bash
-export AWS_ACCESS_KEY_ID="temp-access-key-id"
-export AWS_SECRET_ACCESS_KEY="temp-secret-access-key"
-export AWS_SESSION_TOKEN="temp-session-token"
+```ts
+	useEffect(() => {
+		if (app) apiGetRequest(`/credentials/${app.appName}`, jwt).then((response) => {
+			setCredentials(response.iamCredentials)
+		}).catch(setProblem)
+	}, [app])
 ```
 
-You can now use these credentials to access AWS resources as defined by the IAM role.
+Then use these credentials to create a AWS S3 SDK session on our client
+```ts
+	useEffect(() => {
+		if (!credentials) return
+		async function createS3Client() {
+			const s3 = new S3Client({
+				region: AWS_REGION,
+				credentials: {
+					accessKeyId: credentials!.Credentials!.AccessKeyId!,
+					secretAccessKey: credentials!.Credentials!.SecretAccessKey!,
+					sessionToken: credentials!.Credentials!.SessionToken!,
+					expiration: credentials!.Credentials!.Expiration!,
+					accountId: credentials!.AssumedRoleUser!.AssumedRoleId!
+				}
+			})
+			setS3Client(s3)
+		}
+		createS3Client()
+	}, [credentials])
+```
 
+Now we can use the s3 client to access only resources under our specified prefix!
