@@ -1,54 +1,17 @@
-import React, { ReactNode, useEffect, useMemo, useState } from 'react';
+import React from 'react';
 import './App.css';
 import './drac.css';
 import './gh.css';
 import './rehype.css';
 import { useLocation, useRoutes } from 'react-router-dom';
 import Root from './layouts/Root';
-import { AnimatePresence, Variants, motion } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import Home from './pages/home';
 import { BlogContext, ProjectContext } from './contexts/contexts';
 import BlogIndex from './pages/blogIndex';
 import About from './pages/about';
 import ProjectsIndex from './pages/projectIndex';
-
-type MdxModule = {
-	default: React.ComponentType
-}
-type LazyMdxProps = {
-	importHook: () => Promise<MdxModule>
-}
-
-export type MdxMappingItem = {
-	path: string,
-	element: Element
-}
-
-const LazyMdx: React.FC<LazyMdxProps> = ({ importHook }) => {
-	const [module, setModule] = useState<React.ComponentType>()
-	const variants: Variants = {
-		loading: {
-			opacity: 0,
-			filter: 'blur(50px)'
-		},
-		loaded: {
-			opacity: 1,
-		}
-	}
-	useEffect(() => {
-		importHook().then(module => setModule(module.default))
-	}, [])
-	return (
-
-		<motion.div
-			variants={variants}
-			animate={module ? 'loaded' : 'loading'}
-			style={{ display: 'flex', flexDirection: 'column' }}
-		>
-			{module ? module : <></>}
-		</motion.div>
-	)
-}
+import LazyMdx, { LazyMdxProps, MdxMappingItem } from './components/lazyMdx';
 
 
 const blogMdxElements: MdxMappingItem[] = Object.entries(import.meta.glob('./blogs/**.mdx')).map(([key, mdxFunction]) => ({
