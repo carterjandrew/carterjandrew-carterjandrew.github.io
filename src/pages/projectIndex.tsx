@@ -16,7 +16,6 @@ export default function ProjectsIndex() {
 	const navigate = useNavigate()
 	const locaiton = useLocation()
 	const projects = useProjects()
-	console.log(projects)
 	const [delayedLocation, setDelayedLocation] = useState(locaiton)
 	const [currentSlug, setCurrentSlug] = useState<string>()
 	const [targetSlug, setTargetSlug] = useState<string>()
