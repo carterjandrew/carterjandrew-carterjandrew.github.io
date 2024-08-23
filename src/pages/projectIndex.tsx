@@ -4,6 +4,7 @@ import { useProjects } from '../hooks/contextHooks'
 import { useEffect, useState } from 'react'
 import LazyMdx, { LazyMdxProps, MdxMappingItem } from '../components/lazyMdx';
 import { AnimatePresence, Variants } from 'framer-motion';
+import EmptyTrigger from '../components/emptyTrigger';
 
 
 const projectPreviewElements: MdxMappingItem[] = Object.entries(import.meta.glob('../project-previews/**.mdx')).map(([key, mdxFunction]) => ({
@@ -17,7 +18,8 @@ export default function ProjectsIndex() {
 	const projects = useProjects()
 	console.log(projects)
 	const [delayedLocation, setDelayedLocation] = useState(locaiton)
-	const [hoveredSlug, setHoveredSlug] = useState<string>()
+	const [currentSlug, setCurrentSlug] = useState<string>()
+	const [targetSlug, setTargetSlug] = useState<string>()
 
 	const buttonVariants: Variants = {
 		normal: {},
@@ -34,19 +36,25 @@ export default function ProjectsIndex() {
 		setDelayedLocation(locaiton)
 	}, [])
 
+	useEffect(() => {
+		if(!currentSlug) setCurrentSlug(targetSlug)
+	}, [targetSlug])
+
 	if (delayedLocation.pathname === '/projects') return (
 		<div id='blog-wrapper'>
 			<div id='blog-preview-wrapper' style={{ flex: 1 }}>
 				<AnimatePresence mode='wait'>
-					{hoveredSlug && (
+					{targetSlug && currentSlug === targetSlug ? (
 						<motion.div
 							initial={{ opacity: 0, filter: 'blur(50px)' }}
 							animate={{ opacity: 1, filter: 'blur(0px)' }}
 							exit={{ opacity: 0, filter: 'blur(10px)' }}
 							style={{ maxHeight: '100%', flex: 1}}
 						>
-							{projectPreviewElements.find(({ path }) => path === hoveredSlug)!.element}
+							{projectPreviewElements.find(({ path }) => path === currentSlug)!.element}
 						</motion.div>
+					) : (
+						<EmptyTrigger trigger={() => setCurrentSlug(targetSlug)} />
 					)}
 				</AnimatePresence>
 			</div>
@@ -55,10 +63,10 @@ export default function ProjectsIndex() {
 					<motion.button
 						key={path}
 						onClick={() => navigate(path)}
-						onMouseEnter={() => setHoveredSlug(path)}
-						onMouseLeave={() => setHoveredSlug(undefined)}
+						onMouseEnter={() => setTargetSlug(path)}
+						onMouseLeave={() => setTargetSlug(undefined)}
 						variants={buttonVariants}
-						animate={hoveredSlug ? path === hoveredSlug ? 'hover': 'nonHover' : 'normal'}
+						animate={targetSlug ? path === targetSlug ? 'hover': 'nonHover' : 'normal'}
 					>{path}</motion.button>
 				))}
 			</div>
