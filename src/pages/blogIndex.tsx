@@ -1,9 +1,10 @@
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useBlog } from '../hooks/contextHooks'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { AnimatePresence, motion, Variants } from 'framer-motion'
 import LazyMdx, { LazyMdxProps, MdxMappingItem } from '../components/lazyMdx';
 import EmptyTrigger from '../components/emptyTrigger';
+import FourOhFour from './404';
 
 const blogPreviewElements: MdxMappingItem[] = Object.entries(import.meta.glob('../blog-previews/**.mdx')).map(([key, mdxFunction]) => ({
 	path: key.replace('../blog-previews/', '').replace('.mdx', ''),
@@ -17,6 +18,7 @@ export default function BlogIndex() {
 	const [delayedLocation, setDelayedLocation] = useState(locaiton)
 	const [currentSlug, setCurrentSlug] = useState<string>()
 	const [targetSlug, setTargetSlug] = useState<string>()
+	const blogName = useMemo(() => delayedLocation.pathname.replace('/about/', ''), [delayedLocation])
 
 	const buttonVariants: Variants = {
 		normal: {},
@@ -69,6 +71,7 @@ export default function BlogIndex() {
 			</div>
 		</div >
 	)
+	if(!(Object.keys(blogPreviewElements).findIndex(k => k === blogName) + 1)) return <FourOhFour />
 	return (
 		<div id='blog-md-wrapper'>
 			<Outlet />

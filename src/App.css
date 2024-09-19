@@ -50,6 +50,9 @@ img {
 	flex-direction: column;
 }
 
+#emailform h2 {
+		margin-inline: var(--default-padding)
+}
 #emailform textarea {
 	border-radius: 0;
 	border: none;
@@ -170,7 +173,7 @@ div {
 	flex-direction: column;
 	justify-content: center;
 	gap: var(--default-padding);
-	align-items: center;
+	align-items: flex-end;
 	padding-inline: 20;
 }
 
@@ -222,4 +225,16 @@ div {
 	height: auto;
 	max-height: 100%;
 	max-width: 100%;
+}
+
+#abouttable {
+		font-family: monospace;
+		font-size: 1.5em;
+}
+
+#abouttable td {
+		padding: var(--default-padding);
+		outline: solid;
+		outline-width: 1px;
+		outline-color: var(--foreground-color);
 }

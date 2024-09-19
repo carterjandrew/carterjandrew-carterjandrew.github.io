@@ -18,11 +18,11 @@ export default function About() {
 			from_name: returnAddress,
 			message: message
 		}
-		send(import.meta.env.VITE_EMAILJS_SERVICE_ID, import.meta.env.VITE_EMAILJS_TEMPLATE_ID, templateParams).then(() => console.log("Sent email")).catch(() => console.log('Failed to send email'))
+		send(import.meta.env.VITE_EMAILJS_SERVICE_ID, import.meta.env.VITE_EMAILJS_TEMPLATE_ID, templateParams)
 	}
 	return (
 		<div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center', gap: 20}}>
-			<table>
+			<table id="abouttable">
 				<tr>
 					<td>Linkedin</td>
 					<td> <a href="https://www.linkedin.com/in/carter-james-andrew/"> click here </a> </td>

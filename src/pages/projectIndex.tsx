@@ -1,10 +1,11 @@
-import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion';
 import { useProjects } from '../hooks/contextHooks'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import LazyMdx, { LazyMdxProps, MdxMappingItem } from '../components/lazyMdx';
 import { AnimatePresence, Variants } from 'framer-motion';
 import EmptyTrigger from '../components/emptyTrigger';
+import FourOhFour from './404';
 
 
 const projectPreviewElements: MdxMappingItem[] = Object.entries(import.meta.glob('../project-previews/**.mdx')).map(([key, mdxFunction]) => ({
@@ -19,6 +20,7 @@ export default function ProjectsIndex() {
 	const [delayedLocation, setDelayedLocation] = useState(locaiton)
 	const [currentSlug, setCurrentSlug] = useState<string>()
 	const [targetSlug, setTargetSlug] = useState<string>()
+	const projectName = useMemo(() => delayedLocation.pathname.replace('/projects/', ''), [delayedLocation])
 
 	const buttonVariants: Variants = {
 		normal: {},
@@ -71,6 +73,7 @@ export default function ProjectsIndex() {
 			</div>
 		</div >
 	)
+	if(!(projectPreviewElements.findIndex(({path}) => path === projectName) + 1)) return <FourOhFour />
 	return (
 		<div id='blog-md-wrapper'>
 			<Outlet />

@@ -13,16 +13,6 @@ const NavBar: React.FC<NavBarProps> = ({ style }) => {
 	const [transition,] = useTransition()
 
 	const links = ['blog', 'projects', 'about']
-	const [time, setTime] = useState(new Date().toLocaleTimeString());
-
-	useEffect(() => {
-		const intervalId = setInterval(() => {
-			setTime(new Date().toLocaleTimeString());
-		}, 1000);
-
-		// Cleanup interval on component unmount
-		return () => clearInterval(intervalId);
-	}, []);
 
 	return (
 		<motion.div
@@ -34,7 +24,7 @@ const NavBar: React.FC<NavBarProps> = ({ style }) => {
 		>
 			<div id='inner-navbar'>
 				<motion.div whileHover={{opacity: .5}} style={{ overflow: 'auto' }}>
-					<NavLink to='/' className={delayedLocation.pathname === '/' ? 'delayed-active' : ''} >Carter Andrew | {time}</NavLink>
+					<NavLink to='/' className={delayedLocation.pathname === '/' ? 'delayed-active' : ''} >Carter Andrew</NavLink>
 				</motion.div>
 				<div style={{ flex: 1, display: "flex", gap: '--default-padding' }} >
 						{delayedLocation.pathname}
