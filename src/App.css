@@ -230,11 +230,23 @@ div {
 #abouttable {
 		font-family: monospace;
 		font-size: 1.5em;
+		border-collapse: separate;
 }
 
-#abouttable td {
+#grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		border-radius: 10px;
+		border: solid 2px white;
+		overflow: hidden;
+		min-height: auto;
+		flex-shrink: 0;
+}
+
+#grid p {
 		padding: var(--default-padding);
 		outline: solid;
 		outline-width: 1px;
 		outline-color: var(--foreground-color);
+		margin: 0;
 }

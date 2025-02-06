@@ -22,16 +22,12 @@ export default function About() {
 	}
 	return (
 		<div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center', gap: 20}}>
-			<table id="abouttable">
-				<tr>
-					<td>Linkedin</td>
-					<td> <a href="https://www.linkedin.com/in/carter-james-andrew/"> click here </a> </td>
-				</tr>
-				<tr>
-					<td>Github</td>
-					<td> <a href="https://github.com/carterjandrew"> click here </a> </td>
-				</tr>
-			</table>
+			<div id='grid'>
+				<p>LinkedIn</p>
+				<p><a href="https://www.linkedin.com/in/carter-james-andrew/"> click here </a></p>
+				<p>Github</p>
+				<p><a href="https://github.com/carterjandrew"> click here </a></p>
+			</div>
 			<div id='emailform'>
 				<h2>Send me a message</h2>
 				<input value={returnAddress} placeholder='Your email' onChange={(e) => setReturnAddress(e.target.value)} />
